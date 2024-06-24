@@ -1,0 +1,87 @@
+---
+title: "Homework 1"
+author: "Aysha Talakkal Cosumal - 23200212"
+format: html
+date: 06/17/2024
+date-format: long
+echo: false
+---
+
+## <span style="color: green;"> __INTRODUCTION__ </span>
+
+In this document, we will explore the <span style="color: orange;"> __Orange__ </span> dataset, which is a small dataset with 35 recorded observations and 3 columns, recording the growth of orange trees.
+
+## <span style="color: green;"> __DATASET DESCRIPTION__ </span>
+
+```{r}
+# loading the dataset
+data("Orange")
+```
+
+Let us look at the first few rows of our dataset and a detailed description of the variables:
+
+:::: {.columns}
+
+::: {.column width="40%"}
+
+```{r}
+head(Orange,10)
+```
+
+:::
+
+::: {.column width="60%"}
+
+- <span style="color: skyblue;">___Tree___ </span> : ordered factor, indicates which tree measurement is being made on
+
+- <span style="color: skyblue;">___age___ </span> : a numeric vector giving the age of the tree (days since 31st December, 1968)
+
+- <span style="color: skyblue;">___circumference___ </span> : a numeric vector of trunk circumferences (mm)
+
+:::
+
+
+::::
+
+Let us look at a summary of our variables, *age* and *circumference*:
+
+```{r}
+# provides summary statistics of each column except the first
+summary(Orange[,-1]) 
+```
+
+\newpage
+
+## <span style="color: green;"> __SCATTERPLOT__ </span>
+
+Let us create a scatterplot of our data to see the relationship between our variables more clearly:
+
+```{r}
+# loading package for creating good plots
+library(ggplot2)
+
+# plot of age vs circumference, colored by Tree
+ggplot(data = Orange, aes(x = age, y = circumference, color = Tree)) +
+  
+  # scatterplot
+  geom_point() +
+  
+  # plot title, x- and y-axis labels
+  labs(title = "Scatter Plot of Age vs Circumference for each Tree",
+       x = "Age of Tree (days since 31/12/1968)",
+       y = "Circumference (mm)") +
+  
+  # color options
+  scale_color_discrete(name = "Tree") +
+  theme_minimal() +
+  theme(
+    # Center and bolden the title
+    plot.title = element_text(hjust = 0.5, face = "bold")
+  )
+```
+
+## <span style="color: green;"> __DESCRIPTION__ </span>
+
+The above scatterplot provides a visual representation of the relationship between age of the tree in days (since 31st December, 1968) and its trunk circumference. This plot uses the `color` argument to differentiate between the trees, so that it is easier to infer from.
+
+From the plot, we can clearly see that there is a positive relationship between <span style="color: teal;"> Age </span> and <span style="color: teal;"> Circumference </span>. This means that as the tree grows older, the trunk of the tree grows thicker. These findings are consistent with the known fact, that knowing the girth of a tree can tell us its age.
