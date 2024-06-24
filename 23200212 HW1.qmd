@@ -7,7 +7,7 @@ date-format: long
 echo: false
 ---
 
-## <span style="color: green;"> __INTRODUCTION__ </span>
+## <span style="color: magenta;"> __INTRODUCTION__ </span>
 
 In this document, we will explore the <span style="color: orange;"> __Orange__ </span> dataset, which is a small dataset with 35 recorded observations and 3 columns, recording the growth of orange trees.
 
