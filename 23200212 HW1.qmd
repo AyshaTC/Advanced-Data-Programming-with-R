@@ -25,7 +25,7 @@ Let us look at the first few rows of our dataset and a detailed description of t
 ::: {.column width="40%"}
 
 ```{r}
-head(Orange,10)
+head(Orange,12)
 ```
 
 :::
@@ -85,3 +85,20 @@ ggplot(data = Orange, aes(x = age, y = circumference, color = Tree)) +
 The above scatterplot provides a visual representation of the relationship between age of the tree in days (since 31st December, 1968) and its trunk circumference. This plot uses the `color` argument to differentiate between the trees, so that it is easier to infer from.
 
 From the plot, we can clearly see that there is a positive relationship between <span style="color: teal;"> Age </span> and <span style="color: teal;"> Circumference </span>. This means that as the tree grows older, the trunk of the tree grows thicker. These findings are consistent with the known fact, that knowing the girth of a tree can tell us its age.
+
+## <span style="color: blue;"> __LINE PLOT__ </span>
+
+```{r}
+# Create the plot
+ggplot(Orange, aes(x = age, y = circumference, color = as.factor(Tree))) +
+
+  # line plot
+  geom_line() +
+  # add points
+  geom_point() +
+  labs(title = "Growth of Orange Trees Over Time",
+       x = "Age (days)",
+       y = "Circumference (mm)",
+       color = "Tree") +
+  theme_minimal()
+```
