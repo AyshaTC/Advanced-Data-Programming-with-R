@@ -28,5 +28,6 @@ The scatterplot helps visualise the data; the user can choose which field to use
 The histogram also has several choices for the user; the user can choose the number of bins, color of the histogram, choose to show density estimate, and output a graph description.
 
 Additonal files can be uploaded in the bar in provided in the app (see "Upload Additional Dataset") but they have to be stored locally in the desktop using the app.
+For my project, I am including a dataset for Costa Rica, which will also be included in the zip file.
 
 Thank you and enjoy using this app!
