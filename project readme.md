@@ -214,6 +214,8 @@ plt.tight_layout()
 plt.show()
 ```
 
+One reason Adam might have outperformed SGD optimizer is that Adam automatically adjust the learning rate for each parameter during training, reducing the need for manual tuning. SGD uses a fixed global learning rate, which can be challenging to tune. The same learning rate is applied to all parameters, which may not be optimal for parameters that have different gradient magnitudes.
+
 ### Visualizing the Data
 
 Let us display the first 25 images from the training set:
