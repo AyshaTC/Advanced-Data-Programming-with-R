@@ -65,6 +65,104 @@ print(test_images.shape)
 print(test_labels_h.shape)
 ```
 
+We can check how the images in the MNIST dataset look, and how the one-hot encoding has changes the class labels:
+
+```python
+import matplotlib.pyplot as plt
+plt.imshow(train_images[0], cmap = 'gray')
+
+print(train_labels[0])
+print(train_labels_h[0])
+```
+
+```python
+train_lab = to_categorical(train_labels_h[0])
+print(train_lab)
+```
+
+### Model Building and Model Compilation
+
+Our neural network will have one Flatten layer and two dense layers. The flattening layer converts our 2D array of 28 by 28 pixel images to a 1D vector of length 784, so it can be passed onto the Dense layers.
+The first dense layer is a fully connected layer with 128 neurons that applies the ReLU activation function, learning patterns from the flattened input of 784 length vector.
+The second dense layer is the output layer  with 10 neurons (one for each class, since our classification task has 10 classes) using the softmax function to output probabilities that sum to 1, representing the likelihood of each class.
+
+```python
+# Function to build and compile the model
+def build_model(optimizer):
+    model = Sequential([
+        Flatten(input_shape=(28, 28)),
+        Dense(128, activation='relu'),
+        Dense(10, activation='softmax')
+    ])
+    model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
+    return model
+
+# Function to train and evaluate the model
+def train_and_evaluate(optimizer_name, optimizer):
+    # Reset TensorFlow session
+    tf.keras.backend.clear_session()
+    
+    model = build_model(optimizer)
+    model.fit(train_images, train_labels_h, validation_data=(test_images, test_labels_h), epochs=25, batch_size=32, verbose=0)
+    
+    # Evaluate the model
+    test_loss, test_acc = model.evaluate(test_images, test_labels_h, verbose=0)
+    test_predicted = model.predict(test_images, verbose=0)
+    test_predicted_classes = np.argmax(test_predicted, axis=1)
+    
+    precision = precision_score(test_labels, test_predicted_classes, average='macro')
+    recall = recall_score(test_labels, test_predicted_classes, average='macro')
+    f1 = f1_score(test_labels, test_predicted_classes, average='macro')
+    accuracy = accuracy_score(test_labels, test_predicted_classes)
+    
+    return {
+        'Optimizer': optimizer_name,
+        'Accuracy': accuracy,
+        'Precision': precision,
+        'Recall': recall,
+        'F1_score': f1,
+        'Predictions': test_predicted_classes  # To be used for confusion matrix plotting
+    }
+
+# Define optimizers
+optimizers = {
+    'Adam': tf.keras.optimizers.Adam(learning_rate=0.001),
+    'SGD': tf.keras.optimizers.SGD(learning_rate=0.001),
+    'RMSprop': tf.keras.optimizers.RMSprop(learning_rate=0.001),
+    'Adagrad': tf.keras.optimizers.Adagrad(learning_rate=0.001)
+}
+
+# Evaluate all optimizers
+results = []
+predictions = {}
+for name, opt in optimizers.items():
+    result = train_and_evaluate(name, opt)
+    results.append({
+        'Optimizer': name,
+        'Accuracy': result['Accuracy'],
+        'Precision': result['Precision'],
+        'Recall': result['Recall'],
+        'F1_score': result['F1_score']
+    })
+    predictions[name] = result['Predictions']
+
+results_df = pd.DataFrame(results)
+```
+
+The loss function we use here is the *categorical cross-entropy function*. Categorical cross-entropy is a critical loss function for training neural networks in multi-class classification problems. It quantifies how far off the model's predictions are from the actual labels by comparing the predicted probability distribution to the true label's one-hot encoded vector. The goal during training is to minimize this loss, thereby improving the model's accuracy.
+
+The evaluation metric we are using on the model is accuracy. Although we are calculating other metrics like precision, recall, F1-score etc., the model will be mainly evaluated based on the accuracy metric, and the other metrics will be able to provide more nuanced insights into the model's performance.
+
+The model is trained for 25 epochs with a batch size of 32.
+
+Four optimizers are used here: Adam, SGD, Adagrad, RMSProp.
+
+Although true postiives and false negatives are important metrics in classification, we will not be calculating them here, as ours is a multi-class classification. This makes it harder to define what, say, a true negative is, as opposed to binary classification. Metrics such as recall and precision, which use true positives, can still be calculated, by finding TP,TN,FP,FN for each class, and then taking the average. This is another reason why accuracy is primarily chosen as an evaluation metric here, because of the simplicity of the definition (correctly classified images/total images).
+
+The results are stored in a dataframe.
+
+Printi
+
 
 
 
