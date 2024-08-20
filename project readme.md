@@ -214,4 +214,88 @@ plt.tight_layout()
 plt.show()
 ```
 
+### Visualizing the Data
+
+Let us display the first 25 images from the training set:
+
+```python
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(10, 10))
+for i in range(25):
+    plt.subplot(5, 5, i+1)
+    plt.xticks([])
+    plt.yticks([])
+    plt.grid(False)
+    plt.imshow(train_images[i], cmap=plt.cm.binary)
+    plt.xlabel(train_labels[i])
+plt.show()
+```
+
+### Confusion Matrices
+
+The confusion matrix provides a detailed view of how well the model's predictions match the actual labels, allowing us to see which digits are most frequently confused.
+Let us show confusion matrices for the best and worst optimizers:
+
+```python
+# Plot confusion matrix for the best optimizer
+best_optimizer_preds = predictions[best_optimizer['Optimizer']]
+cm_best = confusion_matrix(test_labels, best_optimizer_preds)
+disp_best = ConfusionMatrixDisplay(confusion_matrix=cm_best, display_labels=np.arange(10))
+plt.figure(figsize=(10, 8))
+disp_best.plot(cmap='Greens')
+plt.title(f'Confusion Matrix for {best_optimizer["Optimizer"]}')
+plt.show()
+```
+
+```python
+# Plot confusion matrix for the worst optimizer
+worst_optimizer_preds = predictions[worst_optimizer['Optimizer']]
+cm_worst = confusion_matrix(test_labels, worst_optimizer_preds)
+disp_worst = ConfusionMatrixDisplay(confusion_matrix=cm_worst, display_labels=np.arange(10))
+plt.figure(figsize=(10, 8))
+disp_worst.plot(cmap='Greens')
+plt.title(f'Confusion Matrix for {worst_optimizer["Optimizer"]}')
+plt.show()
+```
+
+### Misclassification
+
+Since our accuracy is not 100%, we know that images have been misclassified in our model. Let us see how the misclassified images look for the best and worst optimizers:
+
+```python
+# Function to plot misclassifications
+def plot_misclassifications(images, true_labels, predicted_labels, num_examples=10):
+    misclassified_indices = np.where(true_labels != predicted_labels)[0]
+    if len(misclassified_indices) == 0:
+        print("No misclassifications found.")
+        return
+    
+    # Randomly sample misclassified indices
+    sample_indices = np.random.choice(misclassified_indices, num_examples, replace=False)
+    
+    plt.figure(figsize=(12, 12))
+    for i, index in enumerate(sample_indices):
+        plt.subplot(5, 5, i+1)
+        plt.xticks([])
+        plt.yticks([])
+        plt.grid(False)
+        plt.imshow(images[index], cmap=plt.cm.binary)
+        plt.xlabel(f'True: {true_labels[index]}, Pred: {predicted_labels[index]}')
+    plt.tight_layout()
+    plt.show()
+```
+
+```python
+# Plot misclassifications for the best optimizer
+plot_misclassifications(test_images, test_labels, best_optimizer_preds)
+```
+
+```python
+# Plot misclassifications for the worst optimizer
+plot_misclassifications(test_images, test_labels, worst_optimizer_preds)
+```
+
+
+
 
