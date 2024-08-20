@@ -161,8 +161,57 @@ Although true postiives and false negatives are important metrics in classificat
 
 The results are stored in a dataframe.
 
-Printi
+```python
+# Print model summary
+model.summary()
+```
 
+This just provides us with a brief overview of our model, with information on the layer, output shape and number of paramters in each layer.
 
+Now we can print the results here:
+
+```python
+print(results_df)
+```
+
+Let us determine the best performing and the worst performing optimizer based on accruacy as the metric:
+
+```python
+# Determine the best and worst optimizer based on accuracy
+best_optimizer = results_df.loc[results_df['Accuracy'].idxmax()]
+worst_optimizer = results_df.loc[results_df['Accuracy'].idxmin()]
+
+# Print the best and worst optimizer details
+print("\nBest Optimizer:")
+print(best_optimizer)
+
+print("\nWorst Optimizer:")
+print(worst_optimizer)
+```
+
+We are filtering our results of the four optimizers, to only include the best and worst performing optimizer. We then produce a bar graph that shows the precision, accuracy, recall, and F1-score for Adam and SGD optimizers (best and worst).
+
+```python
+# Filter results to include only the best and worst optimizers
+filtered_results_df = results_df[results_df['Optimizer'].isin([best_optimizer['Optimizer'], worst_optimizer['Optimizer']])]
+
+# Prepare data for plotting
+metrics_df = pd.melt(filtered_results_df, id_vars='Optimizer', var_name='metric', value_name='value')
+
+# Define custom color palette
+custom_palette = {
+    best_optimizer['Optimizer']: '#BBF90F',  # Parrot Green
+    worst_optimizer['Optimizer']: '#7BC8F6'  # Dusty Blue
+}
+
+# Plotting the results
+plt.figure(figsize=(12, 7))
+sns.barplot(x='metric', y='value', hue='Optimizer', data=metrics_df, palette=custom_palette)
+plt.title('Comparison of Metrics for Best and Worst Optimizers')
+plt.ylabel('Metric Value')
+plt.xlabel('Metric')
+plt.tight_layout()
+plt.show()
+```
 
 
